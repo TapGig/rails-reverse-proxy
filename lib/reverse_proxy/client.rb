@@ -60,6 +60,8 @@ module ReverseProxy
       # We can pass in a custom path
       uri = Addressable::URI.parse("#{url}#{options[:path] || env['ORIGINAL_FULLPATH']}")
 
+      Rails.logger.info "Reverse proxying #{source_request.url} to #{uri.to_s}"
+
       # Define headers
       target_request_headers = extract_http_request_headers(source_request.env).merge(options[:headers])
 
@@ -95,6 +97,9 @@ module ReverseProxy
 
       # Make the request
       Net::HTTP.start(uri.hostname, uri.port, http_options) do |http|
+        Rails.logger.info "Connected to #{uri.hostname}:#{uri.port} (SSL: #{http_options[:use_ssl]})"
+        Rails.logger.info "HTTP request: #{target_request.inspect}"
+
         callbacks[:on_connect].call(http)
         target_response = http.request(target_request)
       end
