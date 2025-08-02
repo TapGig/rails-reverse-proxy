@@ -98,7 +98,6 @@ module ReverseProxy
       # Make the request
       Net::HTTP.start(uri.hostname, uri.port, http_options) do |http|
         Rails.logger.info "Connected to #{uri.hostname}:#{uri.port} (SSL: #{http_options[:use_ssl]})"
-        Rails.logger.info "HTTP request: #{target_request.inspect}"
 
         callbacks[:on_connect].call(http)
         target_response = http.request(target_request)
