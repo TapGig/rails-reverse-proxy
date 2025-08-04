@@ -15,7 +15,7 @@ module ReverseProxy
     @@callback_methods = [
       :on_response,
       :on_set_cookies,
-      :on_request,
+      :on_target_request,
       :on_connect,
       :on_success,
       :on_redirect,
@@ -101,7 +101,7 @@ module ReverseProxy
         Rails.logger.info "Connected to #{uri.hostname}:#{uri.port} (SSL: #{http_options[:use_ssl]})"
 
         callbacks[:on_connect].call(http)
-        callbacks[:on_request].call(target_request)
+        callbacks[:on_target_request].call(target_request)
         target_response = http.request(target_request)
       end
 
